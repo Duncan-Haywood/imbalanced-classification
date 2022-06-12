@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
+
 import pandas as pd
 import seaborn as sns
 import pycaret.classification as pcclass
 from sklearn.preprocessing import LabelEncoder
 from IPython import display
+
 
 class imbalanced_classification:
     def __init__(self):
@@ -33,7 +35,7 @@ class imbalanced_classification:
         encoded_df.device = device_encoded
         return encoded_df
     def train(self):
-        pcclass.setup(self.df, target='failure', silent=True, use_gpu=True, fix_imbalance=True, log_experiment="mlflow", experiment_name="baseline", log_plots=True) 
+        pcclass.setup(self.df, target='failure', silent=True, use_gpu=True, fix_imbalance=True, log_experiment="mlflow", experiment_name="baseline", log_plots=True, data_split_stratify=True, ) 
         best_model = pcclass.compare_models(sort="f1", n_select=1)
         boosted_model = pcclass.ensemble_model(best_model, method="Boosting", optimize="f1")
         tuned_model = pcclass.tune_model(boosted_model, optimize="f1")
@@ -42,8 +44,9 @@ class imbalanced_classification:
     def evaluate(self):
         pcclass.evaluate_model(self.final_model)
     def predict(self, df):
+        """Will return the probabilities of the prediction appended to df"""
         self.final_model = pcclass.load_model('imbalanced_classification_model.pkl')
-        predictions = pcclass.predict_model(self.final_model, df)
+        predictions = pcclass.predict_model(self.final_model, df, raw_score=True)
         return predictions    
     def retrain(self, updated_df):
         self.final_model = pcclass.load_model('imbalanced_classification_model.pkl')
@@ -51,8 +54,13 @@ class imbalanced_classification:
         updated_model = pcclass.finalize_model(self.final_model)
         pcclass.save_model(updated_model, 'imbalanced_classification_model.pkl')
 
-
-def __main__():
+def main():
     imb = imbalanced_classification()
     imb.train()
     imb.evaluate()
+
+
+if __name__=="__main__":
+    main()
+
+
