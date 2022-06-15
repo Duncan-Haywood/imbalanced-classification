@@ -15,7 +15,7 @@ provider "aws" {
 #open ec2 instance
 resource "aws_instance" "deep_learning_ec2" {
     ami = "ami-00ab1614b421d5575"
-    instance_type = "p2.xlarge"
+    instance_type = "c5.18xlarge"
     ebs_block_device {
       device_name = "/dev/xvda"
       volume_size = "100"
