@@ -10,7 +10,7 @@ class imbalanced_classification:
     def __init__(self):
         self.df = pd.read_csv('./predict_failure.csv')
     def data_exploration(self):
-        display(df)
+        display(self.df)
         encoded_df = self.encode_categorical_columns()
         display(encoded_df)
         self.display_distribution_plots(encoded_df)
@@ -40,7 +40,7 @@ class imbalanced_classification:
         self.final_model = pcclass.calibrate_model(tuned_model)
         pcclass.save_model(self.final_model, model_name='imbalanced_classification_model.pkl')
     def evaluate(self):
-        pcclass.evaluate_model(self.final_model)
+        display(pcclass.evaluate_model(self.final_model))
     def predict(self, df):
         self.final_model = pcclass.load_model('imbalanced_classification_model.pkl')
         predictions = pcclass.predict_model(self.final_model, df)
