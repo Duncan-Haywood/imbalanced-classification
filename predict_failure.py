@@ -35,7 +35,7 @@ class imbalanced_classification:
         encoded_df.device = device_encoded
         return encoded_df
     def train(self):
-        pcclass.setup(self.df, target='failure', silent=True, use_gpu=True, fix_imbalance=True, log_experiment="mlflow", experiment_name="baseline", log_plots=True, data_split_stratify=True, ) 
+        pcclass.setup(self.df, target='failure', silent=True, fix_imbalance=True, log_experiment="mlflow", experiment_name="baseline", log_plots=True, data_split_stratify=True, ) 
         best_model = pcclass.compare_models(sort="f1", n_select=1)
         boosted_model = pcclass.ensemble_model(best_model, method="Boosting", optimize="f1")
         tuned_model = pcclass.tune_model(boosted_model, optimize="f1")
